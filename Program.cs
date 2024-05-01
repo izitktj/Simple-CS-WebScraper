@@ -6,13 +6,11 @@ internal class Program
 {
     static void Main(string[] args)
     {
-    	string city = "sao+carlos";
+    	string city = "new-york";
     	bool ShowHtml = false;
 
 		foreach(string arg in args)
 		{
-			Console.WriteLine("Verify args");
-
 			if(arg == "-C" || arg == "--city")
 			{
 				Console.WriteLine("Please tell a city");
