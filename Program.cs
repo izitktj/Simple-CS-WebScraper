@@ -36,7 +36,7 @@ internal class Program
 		if(ShowHtml == true)Console.WriteLine("Html: \n" + Weather.html);
     }
 
-    static (string html, string dayHourClimate, string temperature, string cityState) GetWeather(string city)
+    static /* (string html, string dayHourClimate, string temperature, string cityState) */ CityInfo GetWeather(string city)
     {
     	string url = "https://www.google.com/search?q=clima+em+" + city;
 
@@ -46,15 +46,32 @@ internal class Program
     	var htmlDocument = new HtmlDocument();
     	htmlDocument.LoadHtml(html);
 
-    	var temperatureElement = htmlDocument.DocumentNode.SelectSingleNode("//div[@class='BNeawe iBp4i AP7Wnd']");
-    	string temperature = temperatureElement.InnerText;
+		CityInfo Info;
 
-    	var dayHourClimateElement = htmlDocument.DocumentNode.SelectSingleNode("//div[@class='BNeawe tAd8D AP7Wnd']");
-    	string dayHourClimate = dayHourClimateElement.InnerText;
+		try
+		{
+			var temperatureElement = htmlDocument.DocumentNode.SelectSingleNode("//div[@class='BNeawe iBp4i AP7Wnd']");
+    		Info.temperature = temperatureElement.InnerText;
 
-    	var cityStateElement = htmlDocument.DocumentNode.SelectSingleNode("//span[@class='BNeawe tAd8D AP7Wnd']");
-    	string cityState = cityStateElement.InnerText;
+			var dayHourClimateElement = htmlDocument.DocumentNode.SelectSingleNode("//div[@class='BNeawe tAd8D AP7Wnd']");
+			Info.dayHourClimate = dayHourClimateElement.InnerText;
 
-    	return (html, dayHourClimate, temperature, cityState);
+			var cityStateElement = htmlDocument.DocumentNode.SelectSingleNode("//span[@class='BNeawe tAd8D AP7Wnd']");
+			Info.cityState = cityStateElement.InnerText;
+		} catch (Exception e)
+		{
+			Console.WriteLine("Exception while searching, please report to developers.\nException: " + e);
+			return Info.error = true;
+		}
+
+    	
+
+    	return Info;
     }
+
+	public struct CityInfo
+	{
+		string html, dayHourClimate, temperature, cityState;
+		bool error = false;
+	}
 }
